@@ -1,0 +1,38 @@
+﻿@model UniversityManagementSystemWebApp.Models.ClassSchedule
+@{
+    Layout = null;
+    //Layout = "~/Views/Shared/_MyLayout1.cshtml";
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>ClassSchedule</title>
+</head>
+<body>
+<div>
+    @using (Html.BeginForm(null, null, FormMethod.Post))
+    {
+        <table>
+            <tr>
+                <td>@Html.LabelFor(x => x.DepartmentId)</td>
+                <td>@Html.DropDownListFor(x => x.DepartmentId, new SelectList(ViewBag.Departments, "Value", "Text"),new {@class="form-control"})</td>
+            </tr>
+        </table>
+
+        <table border="1">
+            <thead>
+            <tr>
+                <th>Course Code</th>
+                <th>Name</th>
+                <th>Schedule Info</th>
+            </tr>
+            </thead>
+            <tbody id="ScheduleInfo"></tbody>
+        </table>
+    }
+</div>
+</body>
+</html>

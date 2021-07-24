@@ -1,0 +1,44 @@
+﻿
+@using UniversityManagementSystemWebApp.Models
+@model List<UniversityManagementSystemWebApp.Models.Department>
+
+@{
+    //Layout = null;
+    //Layout = "~/Views/Shared/_MyLayout1.cshtml";
+    List<Department> departmentList = Model;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>ViewAll</title>
+    <style>
+        #wrapper {
+            width: 300px;
+            margin: 0 auto;
+        }
+    </style>
+</head>
+<body>
+<div id="wrapper">
+    <fieldset>
+        <legend>View All Departments</legend>
+        <table border="1">
+            <tr>
+                <th>Code</th>
+                <th>Name</th>
+            </tr>
+            @foreach (Department department in departmentList)
+            {
+                <tr>
+                    <td>@department.Code</td>
+                    <td>@department.Name</td>
+                </tr>
+            }
+        </table>
+    </fieldset>
+</div>
+</body>
+</html>

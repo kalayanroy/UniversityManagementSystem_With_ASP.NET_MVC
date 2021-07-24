@@ -1,0 +1,80 @@
+﻿
+@{
+    //Layout = null;
+    //Layout = "~/Views/Shared/_MyLayout1.cshtml";
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Save</title>
+    <style>
+        label.error {
+            color: red;
+        }
+    </style>
+</head>
+<body>
+    <div>
+        <fieldset>
+            <legend>Save Department</legend>
+            <form id="department" method="POST">
+                <table>
+                    <tr>
+                        <td>
+                            <label for="Code">Code</label>
+                        </td>
+                        <td>
+                            <input type="text" id="Code" name="Code" />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <label for="Name">Name</label>
+                        </td>
+                        <td>
+                            <input type="text" id="Name" name="Name" />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <input type="submit" value="Save" />
+                        </td>
+                    </tr>
+                </table>
+            </form>
+            @if (ViewBag.Message != null)
+            {
+                <p>@ViewBag.Message</p>
+            }
+        </fieldset>
+    </div>
+
+    <script src="~/Scripts/jquery-1.12.4.min.js"></script>
+<script src="~/Scripts/jquery.validate.js"></script>
+<script>
+
+    $("#department").validate({
+        rules: {
+            Code: {
+                required: true,
+                minlength: 2,
+                maxlength:7
+            },
+            Name: "required"
+        },
+        messages: {
+            Code: {
+                required: "Please enter a Code",
+                minlength: "Your Code must consist of at least 2 characters",
+                maxlength: "Your Code must consist of at least 7 characters"
+            },
+            Name: "Name is required"
+        }
+    });
+
+</script>
+</body>
+</html>

@@ -1,0 +1,121 @@
+﻿@using System.ComponentModel.DataAnnotations
+@using UniversityManagementSystemWebApp.Models
+@model UniversityManagementSystemWebApp.Models.Course
+@{
+    //Layout = null;
+    //Layout = "~/Views/Shared/_MyLayout1.cshtml";
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Save</title>
+    <style>
+        #errmsg {
+            color: red;
+        }
+
+        .field-validation-error {
+            color: red;
+        }
+    </style>
+</head>
+<body>
+    <div>
+        <fieldset>
+            <legend>Save Course</legend>
+            @using (Html.BeginForm(null, null, FormMethod.Post))
+            {
+                <table>
+                    <tr>
+                        <td>
+                            @Html.Label("Code")
+                        </td>
+                        <td>
+                            @Html.TextBox("Code")
+                            @Html.ValidationMessageFor(x => x.Code)
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            @Html.Label("Name")
+                        </td>
+                        <td>
+                            @Html.TextBox("Name")
+                            @Html.ValidationMessageFor(x => x.Name)
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            @Html.Label("Credit")
+                        </td>
+                        <td>
+                            @Html.TextBoxFor(x => x.Credit)
+                            @Html.ValidationMessageFor(x => x.Credit)
+                            <span id="errmsg"></span>
+                        </td>
+
+                    </tr>
+                    <tr>
+                        <td>
+                            @Html.Label("Descrition")
+                        </td>
+                        <td>
+                            @Html.TextArea("Descrition")
+                            @Html.ValidationMessageFor(x => x.Descrition)
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            @Html.Label("DepartmentId")
+                        </td>
+                        <td>
+                            @Html.DropDownListFor(x => x.DepartmentId, new SelectList(ViewBag.Departments, "Value", "Text"))
+                            @Html.ValidationMessageFor(x => x.DepartmentId)
+                        </td>
+
+                    </tr>
+                    <tr>
+                        <td>
+                            @Html.Label("SemesterId")
+                        </td>
+                        <td>
+                            @Html.DropDownListFor(x => x.SemesterId, new SelectList(ViewBag.Semesters, "Value", "Text"))
+                            @Html.ValidationMessageFor(x => x.SemesterId)
+                        </td>
+
+                    </tr>
+                    <tr>
+                        <td>
+                            <input type="submit" value="Save" />
+                        </td>
+                    </tr>
+                </table>
+            }
+
+            @if (ViewBag.Message != null)
+            {
+                <p>@ViewBag.Message</p>
+            }
+
+        </fieldset>
+    </div>
+    <script src="~/Scripts/jquery-1.12.4.min.js"></script>
+    <script src="~/Scripts/jquery.validate.js"></script>
+    <script src="~/Scripts/jquery.validate.unobtrusive.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            $("#Credit").keypress(function (e) {
+                //if not number display error message
+                if (e.which != 8 && e.which != 0 && (e.which < 45 || e.which > 57)) {
+                    //display error message
+                    $("#errmsg").html("only number allowed").show().fadeOut("slow");
+                    return false;
+                }
+            });
+        });
+    </script>
+</body>
+</html>

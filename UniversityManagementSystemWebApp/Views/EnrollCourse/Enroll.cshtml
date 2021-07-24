@@ -1,0 +1,120 @@
+﻿@model UniversityManagementSystemWebApp.Models.EnrollCourse
+@{
+    //Layout = null;
+    //Layout = "~/Views/Shared/_MyLayout1.cshtml";
+}
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Enroll</title>
+    <style>
+        .field-validation-error {
+            color: red;
+        }
+    </style>
+</head>
+<body>
+<div>
+    <fieldset>
+        <legend>Enroll In a Course</legend>
+        @using (Html.BeginForm(null, null, FormMethod.Post))
+        {
+            <table>
+                <tr>
+                    <td>@Html.LabelFor(x => x.RegistrationNo)</td>
+                    <td>
+                        @Html.DropDownListFor(x => x.RegistrationNo, new SelectList(ViewBag.StudentRegNo, "Value", "Text"))
+                        @Html.ValidationMessageFor(x => x.RegistrationNo)
+                    </td>
+
+                </tr>
+                <tr>
+                    <td>@Html.Label("Name")</td>
+                    <td>
+                        @Html.TextBox("Name")
+                    </td>
+
+                </tr>
+                <tr>
+                    <td>@Html.Label("Email")</td>
+                    <td>
+                        @Html.TextBox("Email")
+                    </td>
+
+                </tr>
+                <tr>
+                    <td>@Html.Label("Department")</td>
+                    <td>
+                        @Html.TextBox("DepartmentId")
+                    </td>
+
+                </tr>
+                <tr>
+                    <td>@Html.LabelFor(x => x.CourseId)</td>
+                    <td>
+                        @Html.DropDownListFor(x => x.CourseId, new SelectList(ViewBag.Courses,"Value","Text"), new { style = "width:165px;" })
+                        @Html.ValidationMessageFor(x => x.CourseId)
+                    </td>
+
+                </tr>
+                <tr>
+                    <td>@Html.Label("Date")</td>
+                    <td>
+                        <input type="text" id="Date" name="Date" value="@DateTime.Now.ToShortDateString()"/>
+                        @Html.ValidationMessageFor(x => x.Date)
+                    </td>
+
+                </tr>
+                <tr>
+                    <td></td>
+                    <td><input type="submit" value="Enroll"/></td>
+                </tr>
+            </table>
+        }
+        @if (ViewBag.Message != null)
+        {
+            <p>@ViewBag.Message</p>
+        }
+    </fieldset>
+</div>
+
+<script src="~/Scripts/jquery-1.12.4.min.js"></script>
+    <script src="~/Scripts/jquery.validate.min.js"></script>
+    <script src="~/Scripts/jquery-ui-1.12.1.min.js"></script>
+    <script src="~/Scripts/jquery.validate.unobtrusive.min.js"></script>
+<script>
+    $(document).ready(function () {
+        $("#Name").prop('disabled', true);
+        $("#Email").prop('disabled', true);
+        $("#DepartmentId").prop('disabled', true);
+        $("#Date").datepicker({ dateFormat: "dd-mm-yy" });
+        $("#Date").on("change", function () {
+            var selected = $(this).val();
+            $("#Date").val(selected);
+        });
+        $("#RegistrationNo").change(function() {
+            var regId = $("#RegistrationNo").val();
+            var json =
+            {
+                registrationId: regId
+            };
+            $.ajax({
+                type: "POST",
+                url: '@Url.Action("RegistrationNo", "EnrollCourse")',
+                contentType: "application/json; charset=utf-8",
+                data: JSON.stringify(json),
+                success: function (data) {
+                    $.each(data, function (key, value) {
+                        $("#Name").val(value.Name);
+                        $("#Email").val(value.Email);
+                        $("#DepartmentId").val(value.DepartmentName);
+                    });
+                }
+            });
+        });
+    });
+</script>
+</body>
+</html>

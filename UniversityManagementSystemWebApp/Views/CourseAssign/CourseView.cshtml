@@ -1,0 +1,68 @@
+﻿
+
+@{
+    //Layout = null;
+    //Layout = "~/Views/Shared/_MyLayout1.cshtml";
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>CourseView</title>
+</head>
+<body>
+    <div>
+        <fieldset>
+            <legend>View Course Statics</legend>
+            @using (Html.BeginForm(null, null, FormMethod.Post))
+            {
+                <table>
+                    <tr>
+                        <td>@Html.Label("DepartmentId")</td>
+                        <td>@Html.DropDownList("DepartmentId", new SelectList(ViewBag.Departments, "Value", "Text"))</td>
+                    </tr>
+                </table>
+                <h1>Course Information</h1>
+                <table border="1">
+                    <thead>
+                        <tr>
+                            <th>Code</th>
+                            <th>Name/Title</th>
+                            <th>Semester</th>
+                            <th>Assigned To</th>
+                        </tr>
+                    </thead>
+                    <tbody id="courseInfo"></tbody>
+
+                </table>               
+            }
+        </fieldset>
+    </div>
+    <script src="~/Scripts/jquery-1.12.4.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            $("#DepartmentId").change(function () {
+                var deptId = $("#DepartmentId").val();
+                var json =
+                {
+                    departmentId: deptId
+                };
+                $.ajax({
+                    type: "POST",
+                    url: '@Url.Action("GetDepartmentByCourseView", "CourseAssign")',
+                    contentType: "application/json; charset=utf-8",
+                    data: JSON.stringify(json),
+                    success: function (data) {
+                        $("#courseInfo").empty();
+                        $.each(data, function (key, value) {
+                            $("#courseInfo").append('<tr> <td>' + value.Code + '</td> <td>' + value.Name + '</td> <td>' + value.Semester + '</td> <td>' + value.Teacher + '</td> </tr>');
+                        });
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>

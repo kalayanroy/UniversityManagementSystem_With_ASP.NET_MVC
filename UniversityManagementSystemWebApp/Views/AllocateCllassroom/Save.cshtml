@@ -1,0 +1,91 @@
+﻿@model UniversityManagementSystemWebApp.Models.AllocateClassrooms
+@{
+    Layout = null;
+    //Layout = "~/Views/Shared/_MyLayout1.cshtml";
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Save</title>
+    <link href="~/Content/mdtimepicker.css" rel="stylesheet" />
+</head>
+<body>
+<div>
+    <fieldset>
+        <legend>Allocate Classrooms</legend>
+        @using (Html.BeginForm(null, null, FormMethod.Post))
+        {
+            <table>
+                <tr>
+                    <td>@Html.Label("DepartmentId")</td>
+                    <td>@Html.DropDownList("DepartmentId", new SelectList(ViewBag.Departments, "Value", "Text"))</td>
+                </tr>
+                <tr>
+                    <td>@Html.Label("CourseId")</td>
+                    <td>
+                        <select id="CourseId" name="CourseId" class="CourseId">
+                            <option value="">--Select--</option>
+                        </select>
+                    </td>
+                </tr>
+                <tr>
+                    <td>@Html.Label("Room No")</td>
+                    <td>@Html.DropDownList("RoomId", new SelectList(ViewBag.Rooms, "Value", "Text"))</td>
+                </tr>
+                <tr>
+                    <td>@Html.Label("Day")</td>
+                    <td>@Html.DropDownList("DayId", new SelectList(ViewBag.Days, "Value", "Text"))</td>
+                </tr>
+                <tr>
+                    <td>@Html.LabelFor(x=>x.FromTime)</td>
+                    <td>@Html.TextBoxFor(x=>x.FromTime)</td>
+                </tr>
+                <tr>
+                    <td>@Html.LabelFor(x => x.ToTime)</td>
+                    <td>@Html.TextBoxFor(x => x.ToTime)</td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td><input type="submit" id="Allocate"/></td>
+                </tr>
+            </table>
+        }
+        @if (ViewBag.Message != null)
+        {
+            <h3>@ViewBag.Message</h3>
+        }
+    </fieldset>
+</div>
+    <script src="~/Scripts/jquery-1.12.4.min.js"></script>
+    <script src="~/Scripts/mdtimepicker.js"></script>
+    <script src="~/Scripts/jquery.datetimepicker.js"></script>
+<script>
+    $(document).ready(function() {
+        $("#DepartmentId").change(function() {
+            var deptId = $("#DepartmentId").val();
+            var json =
+            {
+                departmentId: deptId
+            };
+            $.ajax({
+                type: "POST",
+                url: '@Url.Action("GetCourseByDepartmentId", "AllocateCllassroom")',
+                contentType: "application/json; charset=utf-8",
+                data: JSON.stringify(json),
+                success: function (data) {
+                    $.each(data, function (key, value) {                      
+                        $("#CourseId").append('<option value=' + value.Id + '>' + value.Name + '</option>');
+                    });
+                }
+            });
+        });
+
+        $('#FromTime').mdtimepicker();
+        $('#ToTime').mdtimepicker();
+    });
+</script>
+</body>
+</html>

@@ -1,0 +1,115 @@
+﻿@model UniversityManagementSystemWebApp.Models.StudentResult
+@{
+    //Layout = null;
+    Layout = "~/Views/Shared/_MyLayout1.cshtml";
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Save</title>
+    <style>
+        .field-validation-error {
+            color: red;
+        }
+    </style>
+</head>
+<body>
+<div>
+    <fieldset>
+        <legend>Save Student Result</legend>
+        @using (Html.BeginForm(null, null, FormMethod.Post))
+        {
+            <table>
+                <tr>
+                    <td>@Html.Label("RegistrationNo")</td>
+                    <td>
+                        @Html.DropDownList("RegistrationNo", new SelectList(ViewBag.RegNo, "Value", "Text"))
+                        @Html.ValidationMessageFor(x=>x.RegistrationNo)
+                    </td>
+                </tr>
+                <tr>
+                    <td>@Html.Label("Name")</td>
+                    <td>
+                        @Html.TextBox("Name")
+                    </td>
+                </tr>
+                <tr>
+                    <td>@Html.Label("Email")</td>
+                    <td>
+                        @Html.TextBox("Email")
+                    </td>
+                </tr>
+                <tr>
+                    <td>@Html.Label("Department")</td>
+                    <td>
+                        @Html.TextBox("Department")
+                    </td>
+                </tr>
+                <tr>
+                    <td>@Html.Label("CourseId")</td>
+                    <td>
+                        <select id="CourseId" name="CourseId" class="CourseId">
+                            <option value="">--Select--</option>
+                        </select>
+                        @Html.ValidationMessageFor(x => x.CourseId)
+                    </td>
+                </tr>
+                <tr>
+                    <td>@Html.Label("GradeLetterId")</td>
+                    <td>
+                        @Html.DropDownList("GradeLetterId", new SelectList(ViewBag.Grades, "Value", "Text"))
+                        @Html.ValidationMessageFor(x => x.GradeLetterId)
+                    </td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td><input type="submit" value="Save"/></td>
+                </tr>
+            </table>
+        }
+        @if (ViewBag.Message != null)
+        {
+            <p>@ViewBag.Message</p>
+        }
+    </fieldset>
+</div>
+    <script src="~/Scripts/jquery-1.12.4.js"></script>
+    <script src="~/Scripts/jquery.validate.min.js"></script>
+    <script src="~/Scripts/jquery.validate.unobtrusive.min.js"></script>
+<script>
+    $(document).ready(function () {
+        $("#Name").prop('disabled', true);
+        $("#Email").prop('disabled', true);
+        $("#Department").prop('disabled', true);
+        $("#CourseId").prop('disabled', true);
+
+        $("#RegistrationNo").change(function () {
+            var regNo = $("#RegistrationNo").val();
+            var json =
+            {
+                registrationNo: regNo
+            };
+            $.ajax({
+                type: "POST",
+                url: '@Url.Action("GetRegNoByStudentInfo", "StudentResult")',
+                contentType: "application/json; charset=utf-8",
+                data: JSON.stringify(json),
+                success: function (data) {
+                    $.each(data, function (key, value) {
+                        $("#CourseId").prop('disabled', false);
+
+                        $("#Name").val(value.Name);
+                        $("#Email").val(value.Email);
+                        $("#Department").val(value.Department);
+                        $("#CourseId").append('<option value=' + value.CourseId + '>' + value.CourseName + '</option>');
+                    });
+                }
+            });
+        });
+    });
+</script>
+</body>
+</html>

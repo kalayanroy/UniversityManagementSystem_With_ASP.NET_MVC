@@ -1,0 +1,126 @@
+﻿@model UniversityManagementSystemWebApp.Models.Teacher
+@{
+    //Layout = null;
+    //Layout = "~/Views/Shared/_MyLayout1.cshtml";
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Save</title>
+    <style>
+        
+        span.field-validation-error {
+            color: red;
+        }
+
+    </style>
+</head>
+<body>
+<div>
+    <fieldset>
+        <legend>Save Teacher</legend>
+        @using (Html.BeginForm(null,null,FormMethod.Post,new{id="Teacher"}))
+        {
+            <table>
+                <tr>
+                    <td>
+                        @Html.Label("Name")
+                    </td>
+                    <td>
+                        @Html.TextBoxFor(x => x.Name)
+                        @Html.ValidationMessageFor(x=>x.Name)
+                    </td>
+                </tr>
+
+                <tr>
+                    <td>
+                        @Html.Label("Address")
+                    </td>
+                    <td>
+                        @Html.TextAreaFor(x => x.Address)
+                        @Html.ValidationMessageFor(x => x.Address)
+                    </td>
+                </tr>
+
+                <tr>
+                    <td>
+                        @Html.Label("Email")
+                    </td>
+                    <td>
+                        @Html.TextBoxFor(x => x.Email)
+                        @Html.ValidationMessageFor(x => x.Email)
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        @Html.Label("Contact")
+                    </td>
+                    <td>
+                        @Html.TextBoxFor(x => x.Contact)
+                        @Html.ValidationMessageFor(x => x.Contact)
+                        <span id="errmsg"></span>
+                    </td>
+                    
+                </tr>
+                <tr>
+                    <td>
+                        @Html.Label("Designation")
+                    </td>
+                    <td>
+                        @Html.DropDownList("DesignationId", new SelectList(ViewBag.Designation, "Value", "Text"))
+                        @Html.ValidationMessageFor(x => x.DesignationId)
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        @Html.Label("DepartmentId")
+                    </td>
+                    <td>
+                        @Html.DropDownList("DepartmentId", new SelectList(ViewBag.Departments, "Value", "Text"))
+                        @Html.ValidationMessageFor(x => x.DepartmentId)
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        @Html.Label("CreditToken")
+                    </td>
+                    <td>
+                        @Html.TextBoxFor(x => x.CreditToken)                       
+                        @Html.ValidationMessageFor(x => x.CreditToken)
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <input type="submit" value="Save"/>
+                    </td>
+                </tr>
+            </table>
+
+        }
+        @if (ViewBag.Message != null)
+        {
+            <p>@ViewBag.Message</p>
+        }
+    </fieldset>
+</div>
+
+    <script src="~/Scripts/jquery-1.12.4.min.js"></script>
+    <script src="~/Scripts/jquery.validate.min.js"></script>
+<script src="~/Scripts/jquery.validate.unobtrusive.min.js"></script>
+<script>
+    $(document).ready(function () {
+        $("#Contact").keypress(function (e) {
+            //if not number display error message
+            if (e.which != 8 && e.which != 0 && (e.which < 42 || e.which > 57)) {
+                //display error message
+                $("#errmsg").html("only number allowed").show().fadeOut("slow");
+                return false;
+            }
+        });
+    });
+</script>
+</body>
+</html>

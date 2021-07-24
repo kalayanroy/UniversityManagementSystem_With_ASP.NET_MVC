@@ -1,0 +1,113 @@
+﻿@model UniversityManagementSystemWebApp.Models.ViewResult
+@{
+    //Layout = null;
+    Layout = "~/Views/Shared/_MyLayout1.cshtml";
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>ViewResult</title>
+</head>
+<body>
+<div>
+    <fieldset>
+        <legend>View Result</legend>
+        @using (Html.BeginForm("Export", "ViewResult", FormMethod.Post))
+        {
+            <table>
+                <tr>
+                    <td>@Html.Label("RegNo")</td>
+                    <td>
+                        @Html.DropDownList("RegNo", new SelectList(ViewBag.RegNo, "Value", "Text"))
+                        @Html.ValidationMessageFor(x => x.RegNo)
+                    </td>
+                </tr>
+                <tr>
+                    <td>@Html.Label("Name")</td>
+                    <td>
+                        @Html.TextBox("Name")
+                        @Html.ValidationMessageFor(x => x.Name)
+                    </td>
+                </tr>
+                <tr>
+                    <td>@Html.Label("Email")</td>
+                    <td>
+                        @Html.TextBox("Email")
+                        @Html.ValidationMessageFor(x => x.Email)
+                    </td>
+                </tr>
+                <tr>
+                    <td>@Html.Label("Department")</td>
+                    <td>
+                        @Html.TextBox("Department")
+                        @Html.ValidationMessageFor(x => x.Department)
+                    </td>
+                </tr>
+                <tr>
+                    <td><input type="hidden" name="GridHtml" /></td>
+                    <td><input type="submit" id="PDF" value="Make PDF"/></td>
+                </tr>
+            </table>
+        }
+    </fieldset>
+</div>
+    <div id="Grid">
+        <table cellpadding="5" cellspacing="0" style="border: 1px solid #ccc;font-size: 9pt;">
+            <thead>
+                <tr>
+                    <th style="background-color: #B8DBFD;border: 1px solid #ccc">Course Code</th>
+                    <th style="background-color: #B8DBFD;border: 1px solid #ccc">Name</th>
+                    <th style="background-color: #B8DBFD;border: 1px solid #ccc">Grade</th>
+                </tr>
+            </thead>
+
+
+            <tbody id="studentResult"></tbody>
+
+        </table>
+    </div>    <script src="~/Scripts/jquery-1.12.4.js"></script>
+    <script src="~/Scripts/jquery.validate.min.js"></script>
+    <script src="~/Scripts/jquery.validate.unobtrusive.min.js"></script>
+<script>
+    $(document).ready(function() {
+        $("#Name").prop('disabled', true);
+        $("#Email").prop('disabled', true);
+        $("#Department").prop('disabled', true);
+
+
+        $("#RegNo").change(function () {
+            var regNo = $("#RegNo").val();
+            var json =
+            {
+                registrationNo: regNo
+            };
+            $.ajax({
+                type: "POST",
+                url: '@Url.Action("GetRegNoByStudentInfo", "ViewResult")',
+                contentType: "application/json; charset=utf-8",
+                data: JSON.stringify(json),
+                success: function (data) {
+
+                    $("#studentResult").empty();
+                    $.each(data, function (key, value) {
+                        $("#Name").val(value.Name);
+                        $("#Email").val(value.Email);
+                        $("#Department").val(value.DepartmentName);
+
+                        $("#studentResult").append('<tr> <td>' + value.CourseCode + ' </td> <td> ' + value.Name + '</td> <td> ' + value.GradeLetter + '</td> </tr>');
+                    });
+                }
+            });
+        });
+
+        $("#PDF").click(function () {
+
+            $("input[name='GridHtml']").val($("#Grid").html());
+        });
+    });
+</script>
+</body>
+</html>
